@@ -83,7 +83,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Total Trades</h3>
-                <h3 class="text-black/60 text-md font-bold dark:text-white">2</h3>
+                <h3 id="totalTrade" class="text-black/60 text-md font-bold dark:text-white">0</h3>
             </div>
             <div>
                 <i data-lucide="chart-column" class="text-black/60 w-6 dark:text-white/80"></i>
@@ -93,7 +93,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Active Trades</h3>
-                <h3 class="text-md text-black/60 font-bold dark:text-white">1</h3>
+                <h3 id="activeTrade" class="text-md text-black/60 font-bold dark:text-white">0</h3>
             </div>
             <div>
                 <i data-lucide="notepad-text" class="w-6 text-black/60 dark:text-white/80"></i>
@@ -103,7 +103,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Win Rate</h3>
-                <h3 class="text-emerald-600 dark:text-emerald-400 font-bold text-md">50.0%</h3>
+                <h3 id="winRate" class="text-emerald-600 dark:text-emerald-400 font-bold text-md">0.00%</h3>
             </div>
             <div>
                 <i data-lucide="trending-up" class="w-6 text-emerald-600 dark:text-emerald-400"></i>
@@ -113,7 +113,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Loss Rate</h3>
-                <h3 class="text-red-600 dark:text-red-500 text-md font-bold">50.0%</h3>
+                <h3 id="lossRate" class="text-red-600 dark:text-red-500 text-md font-bold">0.00%</h3>
             </div>
             <div>
                 <i data-lucide="trending-down" class="w-6 dark:text-red-500 text-red-600"></i>
@@ -123,7 +123,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Net P/L</h3>
-                <h3 class="text-md font-bold text-emerald-600 dark:text-emerald-400">Rs1000</h3>
+                <h3 id="netPL" class="text-md font-bold text-emerald-600 dark:text-emerald-400">Rs 0</h3>
             </div>
             <div>
                 <i data-lucide="dollar-sign" class="w-6 text-emerald-600/70 dark:text-emerald-500"></i>
@@ -133,7 +133,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <p class="text-xs text-black/60 font-semibold dark:text-white/70">Avg Holding Period</p>
-                <h3 class="text-md font-bold text-black/80 dark:text-white">12.5Days</h3>
+                <h3 id="avgHoldingDay" class="text-md font-bold text-black/80 dark:text-white">0 Days</h3>
             </div>
             <div>
                 <i data-lucide="notepad-text" class="text-black/60 dark:text-white/70 w-6"></i>
@@ -143,7 +143,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <p class="text-xs text-black/60 font-medium dark:text-white/70">Avg Risk Reward </p>
-                <h3 class="text-md font-bold text-emerald-600 dark:text-emerald-400">1:1.70</h3>
+                <h3 id="avgRiskReward" class="text-md font-bold text-emerald-600 dark:text-emerald-400">0:0</h3>
             </div>
             <div>
                 <i data-lucide="target" class="text-red-600 dark:text-red-500 w-6"></i>

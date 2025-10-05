@@ -58,6 +58,7 @@ function hideDialog(){
     dialog.classList.add('hidden')
     dialog.classList.remove('flex')
 }
+
 function poluteInput(){
     let state = getState()
 
@@ -105,6 +106,7 @@ function poluteInput(){
 
     return true
 }
+
 function validation(inputId){
     const value =  parseInt(document.getElementById(inputId).value);
     const input = document.getElementById(inputId);
@@ -134,6 +136,7 @@ function render(){
     console.log(localStorage)
 
     let state = getState()
+    renderCards()
     console.log(state)
     if(state.trade.length === 0){
         document.getElementById('toBeHidden').classList.remove('hidden')
@@ -154,7 +157,16 @@ function render(){
     lucide.createIcons()
 }
 
+function renderCards(){
+    let totalTrade = countTotalTrade();
+    document.getElementById('totalTrade').textContent = totalTrade
+}
 
+function countTotalTrade(){
+    let state = getState();
+    let count = state.trade.length;
+    return count
+}
 
 function createCard(elem,idx){
     const wrapperDiv = document.createElement('div')
