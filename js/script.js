@@ -1,5 +1,5 @@
 import { create_element, createSpan } from "./helper/helper.js"
-import { getState, udpateTrade, updateState } from "./state/state.js"
+import { getState, updateState } from "./state/state.js"
 let dialog = document.getElementById('myDialog')
 
 document.getElementById('addTrade').addEventListener('click',()=>{
@@ -22,7 +22,6 @@ document.getElementById('crossX').addEventListener('click',()=>{
 })
 
 document.addEventListener('DOMContentLoaded',()=>{
-    console.log('adlskfh')
     lucide.createIcons()
     render()
 
@@ -55,14 +54,23 @@ function showDialog(){
 }
 
 function hideDialog(){
-    console.log('hide bhitra')
     let dialog = document.getElementById('myDialog')
     dialog.classList.add('hidden')
     dialog.classList.remove('flex')
 }
-
-function poluteInput(idx){
+function poluteInput(){
     let state = getState()
+
+    let validBuyPp = validation('inputBuyPrice')
+    let validSellPp = validation('inputSellPrice')
+    let validQty = validation('inputQty')
+    let validTarget = validation('inputTarget')
+    let validSl = validation('inputSl')
+    let validExitPp = validation('inputExitPrice')
+
+    if(!validBuyPp || !validExitPp || !validQty || !validSellPp || !validSl || !validTarget){
+        return false;
+    }
 
     let date = document.getElementById('inputDate').value;
     let stock = document.getElementById('inputStock').value;
@@ -84,7 +92,6 @@ function poluteInput(idx){
     let exitEmoText = exitEmo.options[exitEmo.selectedIndex].text;
 
     let emotionNotes = document.getElementById('inputEmotionNotes').value || '-';
-    console.log(emotionNotes)
     let lesson = document.getElementById('inputLesson').value || '-';
 
     let improvement = document.getElementById('inputImprovement').value || '-';
@@ -96,17 +103,38 @@ function poluteInput(idx){
     }]
     updateState({trade: [...state.trade,...newState]})
 
+    return true
 }
+function validation(inputId){
+    const value =  parseInt(document.getElementById(inputId).value);
+    const input = document.getElementById(inputId);
+    const sibling = document.querySelector(`#${inputId} + span`)
+    if(isNaN(value)){
+        input.value = '';
+        sibling.textContent = '⚠ Please enter a number'
+        return false
+    }
 
+
+    if(value <= 0){
+        input.value = '';
+        sibling.textContent = '⚠ No negative numbers'
+        return false
+    }
+    return true
+    
+}
 function saveTrade(){
-    hideDialog();
-    poluteInput();
-    render()
+    if(poluteInput()){
+        hideDialog();
+        render()
+    }
 }
 function render(){
+    console.log(localStorage)
 
     let state = getState()
-
+    console.log(state)
     if(state.trade.length === 0){
         document.getElementById('toBeHidden').classList.remove('hidden')
         document.getElementById('toBeHidden').classList.add('flex')
@@ -115,9 +143,11 @@ function render(){
         document.getElementById('toBeHidden').classList.add('hidden')
 
     }
-    console.log(state)
-    console.log(state);
+    const container = document.getElementById('appendDiv')
+    container.innerHTML = '' // clear previous cards before re-render
+
     state.trade.slice().reverse().forEach((elem,i)=>{
+        
         let idx = state.trade.length - i - 1;
         createCard(elem,idx)
     })
@@ -185,13 +215,13 @@ function createCard(elem,idx){
     let sellStatus = createSpan(['dark:text-white', 'text-black','flex','text-center']);
     sellStatus.textContent = elem.soldStatus;
 
-    let emotion = createSpan(['dark:text-white','text-black','text-sm','text-left','wrap-break-word','hyphens-auto','w-[200px]','line-clamp-3']);
+    let emotion = createSpan(['dark:text-white','text-black','text-sm','text-center','truncate','min-w-0','block','overflow-hidden','max-w-[200px]','wrap-break-word','hyphens-auto','w-[200px]','line-clamp-3']);
     emotion.textContent = elem.emtionNoteKey;
 
-    let lessonNotes = createSpan(['dark:text-white','text-black','text-sm','text-left','truncate','min-w-0','block','overflow-hidden','max-w-[200px]','wrap-break-word','hyphens-auto','w-[200px]','line-clamp-3']);
+    let lessonNotes = createSpan(['dark:text-white','text-black','text-sm','text-center','truncate','min-w-0','block','overflow-hidden','max-w-[200px]','wrap-break-word','hyphens-auto','w-[200px]','line-clamp-3']);
     lessonNotes.textContent = elem.lessonKey;
-    lessonNotes.className = 'lessonNoteId'
-    let improvementNote = createSpan(['dark:text-white','text-black','text-sm','text-left','truncate','min-w-0','block','overflow-hidden','max-w-[200px]','wrap-break-word','hyphens-auto','w-[200px]','line-clamp-3']);
+
+    let improvementNote = createSpan(['dark:text-white','text-black','text-sm','text-center','truncate','min-w-0','block','overflow-hidden','max-w-[200px]','wrap-break-word','hyphens-auto','w-[200px]','line-clamp-3']);
     improvementNote.textContent = elem.improveKey;
 
     let action = document.createElement('div')
