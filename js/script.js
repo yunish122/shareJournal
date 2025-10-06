@@ -72,7 +72,7 @@ function poluteInput(){
         return false;
     }
 
-    let date = document.getElementById('inputDate').value;
+    let date = document.getElementById('inputDate').value ;
     let stock = document.getElementById('inputStock').value;
     let buyPP = document.getElementById('inputBuyPrice').value;
     let sellPP = document.getElementById('inputSellPrice').value;
@@ -143,7 +143,7 @@ function render(){
         document.getElementById('toBeHidden').classList.add('hidden')
 
     }
-    const container = document.getElementById('appendDiv')
+    const container = document.getElementById('dynamicCard')
     container.innerHTML = '' // clear previous cards before re-render
 
     state.trade.slice().reverse().forEach((elem,i)=>{
@@ -278,6 +278,6 @@ function createCard(elem,idx){
 
     action.append(editBtn,delBtn)
     wrapperDiv.append(date, stock, buyPP, sellPP, qty, targetPP, sl, exitPrice, plInRs, plPercent, days, condition, entryEmo, exitEmo, trailStop, sellStatus, emotion, lessonNotes, improvementNote,action);
-    document.getElementById('appendDiv').append(wrapperDiv)
+    document.getElementById('dynamicCard').append(wrapperDiv)
 
 }
