@@ -180,11 +180,22 @@ function render(){
 function renderCards(){
     let totalTrade = countTotalTrade();
     document.getElementById('totalTrade').textContent = totalTrade
+    
+    let activeTrade = countActiveTrade()
+    document.getElementById('activeTrade').textContent = activeTrade
+
 }
 
 function countTotalTrade(){
     let state = getState();
     let count = state.trade.length;
+    return count
+}
+
+function countActiveTrade(){
+    let state = getState()
+    let count = 0
+    state.trade.forEach(elem => !elem.soldStatus ? count++ : count)
     return count
 }
 
