@@ -181,8 +181,8 @@ function renderCards(){
     let totalTrade = countTotalTrade();
     document.getElementById('totalTrade').textContent = totalTrade
     
-    let activeTrade = countActiveTrade()
-    document.getElementById('activeTrade').textContent = activeTrade
+    let activeTradeCount = countActiveTrade()
+    document.getElementById('activeTrade').textContent = activeTradeCount
 
 }
 
