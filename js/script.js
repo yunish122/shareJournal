@@ -46,6 +46,28 @@ document.getElementById('saveTrade').addEventListener('click',(e)=>{
     saveTrade()
 })
 
+//listener for sell status
+document.getElementById('dynamicCard').addEventListener(('click'),(e)=>{
+    let statusIcon = e.target.closest('.statusIcon')
+    let elem = statusIcon.closest('.wrapperDiv')
+    console.log(elem)
+
+    let tradeId = Number(elem.dataset.tradeId)
+
+    console.log(tradeId)
+
+    
+    let state = getState()
+    let updatedTrade;
+    if(statusIcon){
+        updatedTrade = state.trade.map(elem => 
+            elem.id === tradeId ? {...elem, soldStatus: !elem.soldStatus} : elem
+        )
+    }
+    updateState({trade: updatedTrade})
+    render()
+})
+
 function showDialog(){
     let dialog = document.getElementById('myDialog')
 
@@ -73,7 +95,7 @@ function poluteInput(){
         return false;
     }
 
-    let date = document.getElementById('inputDate').value;
+    let date = document.getElementById('inputDate').value ;
     let stock = document.getElementById('inputStock').value;
     let buyPP = document.getElementById('inputBuyPrice').value;
     let sellPP = document.getElementById('inputSellPrice').value;
@@ -97,7 +119,7 @@ function poluteInput(){
 
     let improvement = document.getElementById('inputImprovement').value || '-';
 
-    let newState = [{buyDate: date,stockName: stock, buyPrice: buyPP,sellPrice: sellPP,quantity: qty, targetPrice: target, stopLoss: sl,
+    let newState = [{id: Date.now() ,buyDate: date,stockName: stock, buyPrice: buyPP,sellPrice: sellPP,quantity: qty, targetPrice: target, stopLoss: sl,
         exitPrice: exitPP, marketCondition: conditionText, entryEmotion: outputEmoText, exitEmotion: exitEmoText,
         emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: 0, plPercentage: 0, holdDays: 0, soldStatus: false,
         trailStop: 0
@@ -133,7 +155,6 @@ function saveTrade(){
     }
 }
 function render(){
-    console.log(localStorage)
 
     let state = getState()
     renderCards()
@@ -146,11 +167,10 @@ function render(){
         document.getElementById('toBeHidden').classList.add('hidden')
 
     }
-    const container = document.getElementById('appendDiv')
+    const container = document.getElementById('dynamicCard')
     container.innerHTML = '' // clear previous cards before re-render
 
     state.trade.slice().reverse().forEach((elem,i)=>{
-        
         let idx = state.trade.length - i - 1;
         createCard(elem,idx)
     })
@@ -170,12 +190,8 @@ function countTotalTrade(){
 
 function createCard(elem,idx){
     const wrapperDiv = document.createElement('div')
-    wrapperDiv.setAttribute('data-index',idx) 
-    wrapperDiv.id = 'wrapperDiv'
-    wrapperDiv.classList.add('gridStyle')
-    wrapperDiv.classList.add('min-w-0') // allow children to shrink in grid
-
-
+    wrapperDiv.classList.add('wrapperDiv','gridStyle','min-w-0')// allow children to shrink in grid
+    wrapperDiv.dataset.tradeId = elem.id;
     //logic: here i gave made a array of obj with id and value to later put it in evey span using for loop. 
     // disadvantage is i have less control now
 
@@ -224,8 +240,14 @@ function createCard(elem,idx){
     let trailStop = createSpan(['dark:text-white', 'text-black','items-center']);
     trailStop.textContent = elem.trailStop;
 
-    let sellStatus = createSpan(['dark:text-white', 'text-black','flex','text-center']);
-    sellStatus.textContent = elem.soldStatus;
+    let statusIcon = document.createElement('i')
+
+    statusIcon.setAttribute('data-lucide',elem.soldStatus ? 'circle-check' : 'circle')
+    if(elem.soldStatus){
+        statusIcon.classList.add('statusIcon','text-emerald-600','w-5')
+    }else{
+        statusIcon.classList.add('statusIcon','text-gray-300/70','w-5','hover:text-emerald-600','transition','transition-color','duration-200','ease-in-out')
+    }
 
     let emotion = createSpan(['dark:text-white','text-black','text-sm','text-center','truncate','min-w-0','block','overflow-hidden','max-w-[200px]','wrap-break-word','hyphens-auto','w-[200px]','line-clamp-3']);
     emotion.textContent = elem.emtionNoteKey;
@@ -289,7 +311,7 @@ function createCard(elem,idx){
     delBtn.append(delSpan)
 
     action.append(editBtn,delBtn)
-    wrapperDiv.append(date, stock, buyPP, sellPP, qty, targetPP, sl, exitPrice, plInRs, plPercent, days, condition, entryEmo, exitEmo, trailStop, sellStatus, emotion, lessonNotes, improvementNote,action);
-    document.getElementById('appendDiv').append(wrapperDiv)
-
+    wrapperDiv.append(date, stock, buyPP, sellPP, qty, targetPP, sl, exitPrice, plInRs, plPercent, days, condition, entryEmo, exitEmo, trailStop,statusIcon,emotion, lessonNotes, improvementNote,action);
+    document.getElementById('dynamicCard').append(wrapperDiv)
+    lucide.createIcons()
 }
