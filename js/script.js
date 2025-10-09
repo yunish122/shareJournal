@@ -207,7 +207,9 @@ function createCard(elem,idx){
     // disadvantage is i have less control now
 
     let date = createSpan(['dark:text-white', 'text-black']);
-    date.textContent = elem.buyDate;
+    let formatted = new Date().toISOString().slice(0, 10);
+
+    date.textContent = elem.buyDate || formatted;
 
     let stock = createSpan(['dark:text-white', 'text-black']);
     stock.textContent = elem.stockName;
