@@ -47,27 +47,36 @@ document.getElementById('saveTrade').addEventListener('click',(e)=>{
 })
 
 //listener for sell status
+
 document.getElementById('dynamicCard').addEventListener(('click'),(e)=>{
-    let statusIcon = e.target.closest('.statusIcon')
-    let elem = statusIcon.closest('.wrapperDiv')
-    console.log(elem)
-
-    let tradeId = Number(elem.dataset.tradeId)
-
-    console.log(tradeId)
-
-    
     let state = getState()
+    let wrapperDiv = e.target.closest('.wrapperDiv')
+    if(!wrapperDiv) return
+    let tradeId = Number(wrapperDiv.dataset.tradeId)
+    if(!tradeId) return
+
+    let statusIcon = e.target.closest('.statusIcon')
     let updatedTrade;
     if(statusIcon){
-        updatedTrade = state.trade.map(elem => 
-            elem.id === tradeId ? {...elem, soldStatus: !elem.soldStatus} : elem
+        updatedTrade = state.trade.map(e => 
+            e.id === tradeId ? {...e, soldStatus: !e.soldStatus} : e
         )
+        updateState({trade: updatedTrade})
+        render()
+        return
     }
-    updateState({trade: updatedTrade})
-    render()
-})
 
+    let delBtn = e.target.closest('.deleteBtn')
+    if(delBtn){
+        let idx = state.trade.findIndex(i => i.id === tradeId)
+        if(idx === -1) return
+        
+        state.trade.splice(idx,1)
+        updateState({trade: state.trade})
+        render()    
+    }
+
+})
 function showDialog(){
     let dialog = document.getElementById('myDialog')
 
@@ -188,6 +197,7 @@ function renderCards(){
 
 function countTotalTrade(){
     let state = getState();
+
     let count = state.trade.length;
     return count
 }
@@ -295,6 +305,7 @@ function createCard(elem,idx){
 
     let delBtn = document.createElement('button');
     delBtn.classList.add(
+    'deleteBtn',
     'group',
     'dark:bg-[#0f172a]',
     'px-4',
