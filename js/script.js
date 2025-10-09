@@ -70,7 +70,7 @@ document.getElementById('dynamicCard').addEventListener(('click'),(e)=>{
     if(delBtn){
         let idx = state.trade.findIndex(i => i.id === tradeId)
         if(idx === -1) return
-        
+
         state.trade.splice(idx,1)
         updateState({trade: state.trade})
         render()    
@@ -98,9 +98,8 @@ function poluteInput(){
     let validQty = validation('inputQty')
     let validTarget = validation('inputTarget')
     let validSl = validation('inputSl')
-    let validExitPp = validation('inputExitPrice')
 
-    if(!validBuyPp || !validExitPp || !validQty || !validSellPp || !validSl || !validTarget){
+    if(!validBuyPp || !validQty || !validSellPp || !validSl || !validTarget){
         return false;
     }
 
@@ -112,7 +111,6 @@ function poluteInput(){
 
     let target = document.getElementById('inputTarget').value;
     let sl = document.getElementById('inputSl').value;
-    let exitPP = document.getElementById('inputExitPrice').value;
 
     let condition = document.getElementById('inputMarketCondition');
     let conditionText = condition.options[condition.selectedIndex].text;
@@ -129,7 +127,7 @@ function poluteInput(){
     let improvement = document.getElementById('inputImprovement').value || '-';
 
     let newState = [{id: Date.now() ,buyDate: date,stockName: stock, buyPrice: buyPP,sellPrice: sellPP,quantity: qty, targetPrice: target, stopLoss: sl,
-        exitPrice: exitPP, marketCondition: conditionText, entryEmotion: outputEmoText, exitEmotion: exitEmoText,
+        marketCondition: conditionText, entryEmotion: outputEmoText, exitEmotion: exitEmoText,
         emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: 0, plPercentage: 0, holdDays: 0, soldStatus: false,
         trailStop: 0
     }]
@@ -335,7 +333,7 @@ function createCard(elem,idx){
     delBtn.append(delSpan)
 
     action.append(editBtn,delBtn)
-    wrapperDiv.append(date, stock, buyPP, sellPP, qty, targetPP, sl, exitPrice, plInRs, plPercent, days, condition, entryEmo, exitEmo, trailStop,statusIcon,emotion, lessonNotes, improvementNote,action);
+    wrapperDiv.append(date, stock, buyPP, sellPP, qty, targetPP, sl,  plInRs, plPercent, days, condition, entryEmo, exitEmo, trailStop,statusIcon,emotion, lessonNotes, improvementNote,action);
     document.getElementById('dynamicCard').append(wrapperDiv)
     lucide.createIcons()
 }
