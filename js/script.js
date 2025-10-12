@@ -84,9 +84,9 @@ document.getElementById('dynamicCard').addEventListener(('click'),(e)=>{
 
     let delBtn = e.target.closest('.deleteBtn')
     if(delBtn){
-        console.log('!!delete!!')
-        if(idx === - 1) return
-
+        let idx = state.trade.findIndex(i => i.id === tradeId)
+        if(idx === -1) return
+        
         state.trade.splice(idx,1)
         updateState({trade: state.trade})
         render()    
@@ -241,7 +241,7 @@ function poluteInput(){
 
     let newState = [{id: Date.now() ,buyDate: date,stockName: stock, buyPrice: buyPP,sellPrice: sellPP,quantity: qty, targetPrice: target, stopLoss: sl,
         marketCondition: conditionText, entryEmotion: outputEmoText, exitEmotion: exitEmoText,
-        emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: plRs, plPercentage: 0, holdDays: 0, soldStatus: false,
+        emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: 0, plPercentage: 0, holdDays: 0, soldStatus: false,
         trailStop: 0
     }]
 
