@@ -18,7 +18,7 @@ export function updateState(updated_trade){
 //     localStorage.setItem('states',JSON.stringify(state))
 // }
 
-export function udpateTrade(updated_trade,idx){
+export function updateTrade(updated_trade,idx){
     let state = getState()
     let updatedTrade = state.trade.map( elem => elem.id === idx ? {...elem,...updated_trade} : elem)
     updateState({trade: updatedTrade})

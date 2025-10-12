@@ -1,7 +1,7 @@
 import { create_element, createSpan } from "./helper/helper.js"
-import { getState, updateState } from "./state/state.js"
-let dialog = document.getElementById('myDialog')
-
+import { getState, updateState, updateTrade } from "./state/state.js"
+let dialog = document.getElementById('addTradeDialouge')
+let editDialouge = document.getElementById('editTradeDialouge')
 document.getElementById('addTrade').addEventListener('click',()=>{
     dialog.classList.remove('hidden')
     dialog.classList.add('flex')
@@ -15,6 +15,15 @@ document.getElementById('hiddenAddTrade').addEventListener('click',()=>{
 document.getElementById('cancel').addEventListener('click',()=>{
     dialog.classList.add('hidden')
     dialog.classList.remove('flex')
+})
+document.getElementById('editCancel').addEventListener('click',()=>{
+    editDialouge.classList.add('hidden')
+    editDialouge.classList.remove('flex')
+})
+
+document.getElementById('editCrossX').addEventListener('click',()=>{
+    editDialouge.classList.add('hidden')
+    editDialouge.classList.remove('flex')
 })
 document.getElementById('crossX').addEventListener('click',()=>{
     dialog.classList.add('hidden')
@@ -42,11 +51,16 @@ document.getElementById('theme').addEventListener('click',()=>{
 })
 
 document.getElementById('saveTrade').addEventListener('click',(e)=>{
-
     saveTrade()
 })
 
-//listener for sell status
+let listenerIdx = null;
+document.getElementById('editTrade').addEventListener('click',()=>{
+    if(listenerIdx === null){ //protects
+        return
+    }
+    editTrade(listenerIdx)
+})
 
 document.getElementById('dynamicCard').addEventListener(('click'),(e)=>{
     let state = getState()
@@ -54,6 +68,8 @@ document.getElementById('dynamicCard').addEventListener(('click'),(e)=>{
     if(!wrapperDiv) return
     let tradeId = Number(wrapperDiv.dataset.tradeId)
     if(!tradeId) return
+
+    let idx = state.trade.findIndex(i => i.id === tradeId)
 
     let statusIcon = e.target.closest('.statusIcon')
     let updatedTrade;
@@ -68,26 +84,119 @@ document.getElementById('dynamicCard').addEventListener(('click'),(e)=>{
 
     let delBtn = e.target.closest('.deleteBtn')
     if(delBtn){
-        let idx = state.trade.findIndex(i => i.id === tradeId)
-        if(idx === -1) return
-        
+        console.log('!!delete!!')
+        if(idx === - 1) return
+
         state.trade.splice(idx,1)
         updateState({trade: state.trade})
         render()    
     }
 
-})
-function showDialog(){
-    let dialog = document.getElementById('myDialog')
+    let editBtn = e.target.closest('.editBtn')
+    if(editBtn){
+        listenerIdx = tradeId
+        populateForm(state.trade[idx])
+        showEditDialog()
+    }
 
+})
+
+function populateForm(elem) {
+    document.getElementById('editInputDate').value = elem.Date || '';
+    document.getElementById('editInputStock').value = elem.stockName || '';
+    document.getElementById('editInputBuyPrice').value = elem.buyPrice || '';
+    document.getElementById('editInputSellPrice').value = elem.sellPrice || '';
+    document.getElementById('editInputQty').value = elem.quantity || '';
+    document.getElementById('editInputTarget').value = elem.targetPrice || '';
+    document.getElementById('editInputSl').value = elem.stopLoss || '';
+
+    // Selects
+    document.getElementById('editInputMarketCondition').value = elem.marketCondition 
+    document.getElementById('editInputEntryEmo').value = elem.entryEmotion 
+    document.getElementById('editInputExitEmo').value = elem.exitEmotion 
+
+    // Textareas
+    let value1 = checkForPlaceHolder('',elem.emtionNoteKey)
+    document.getElementById('editInputEmotionNotes').value = value1;
+    
+    let value2 = checkForPlaceHolder('', elem.lessonKey)
+    document.getElementById('editInputLesson').value = value2
+
+    let value3 = checkForPlaceHolder('',elem.improveKey)
+    document.getElementById('editInputImprovement').value = value3
+}
+
+function checkForPlaceHolder(placeholder, value){
+    if(value === '-'){
+        return placeholder
+    }else{
+        return value
+    }
+}
+
+function showDialog(){
     dialog.classList.remove('hidden')
     dialog.classList.add('flex')
 }
+function showEditDialog(){
+    
+    editDialouge.classList.remove('hidden')
+    editDialouge.classList.add('flex')
+}
 
+function hideEditDialouge(){
+    editDialouge.classList.add('hidden')
+    editDialouge.classList.remove('flex')
+}
 function hideDialog(){
-    let dialog = document.getElementById('myDialog')
     dialog.classList.add('hidden')
     dialog.classList.remove('flex')
+}
+
+function repolluteEditedInput(idx){
+    let state = getState()
+
+    let validBuyPp = validation('editInputBuyPrice');
+    let validSellPp = validation('editInputSellPrice');
+    let validQty = validation('editInputQty');
+    let validTarget = validation('editInputTarget');
+    let validSl = validation('editInputSl');
+
+    if (!validBuyPp || !validQty || !validSellPp || !validSl || !validTarget) {
+        return false;
+    }
+
+    let date = document.getElementById('editInputDate').value;
+    let stock = document.getElementById('editInputStock').value;
+    let buyPP = document.getElementById('editInputBuyPrice').value;
+    let sellPP = document.getElementById('editInputSellPrice').value;
+    let qty = document.getElementById('editInputQty').value;
+
+    let target = document.getElementById('editInputTarget').value;
+    let sl = document.getElementById('editInputSl').value;
+
+    let condition = document.getElementById('editInputMarketCondition');
+    let conditionText = condition.options[condition.selectedIndex].text 
+
+    let outputEmo = document.getElementById('editInputEntryEmo');
+    let outputEmoText = outputEmo.options[outputEmo.selectedIndex].text || '';
+
+    let exitEmo = document.getElementById('editInputExitEmo');
+    let exitEmoText = exitEmo.options[exitEmo.selectedIndex].text || '';
+
+    let emotionNotes = document.getElementById('editInputEmotionNotes').value || '-';
+    let lesson = document.getElementById('editInputLesson').value || '-';
+    let improvement = document.getElementById('editInputImprovement').value || '-';
+
+    let newState = {buyDate: date,stockName: stock, buyPrice: buyPP,sellPrice: sellPP,quantity: qty, targetPrice: target, stopLoss: sl,
+        marketCondition: conditionText, entryEmotion: outputEmoText, exitEmotion: exitEmoText,
+        emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: 0, plPercentage: 0, holdDays: 0, soldStatus: false,
+        trailStop: 0
+    }
+
+    updateTrade(newState,idx)
+
+    return true
 }
 
 function poluteInput(){
@@ -98,9 +207,8 @@ function poluteInput(){
     let validQty = validation('inputQty')
     let validTarget = validation('inputTarget')
     let validSl = validation('inputSl')
-    let validExitPp = validation('inputExitPrice')
 
-    if(!validBuyPp || !validExitPp || !validQty || !validSellPp || !validSl || !validTarget){
+    if(!validBuyPp || !validQty || !validSellPp || !validSl || !validTarget){
         return false;
     }
 
@@ -112,7 +220,6 @@ function poluteInput(){
 
     let target = document.getElementById('inputTarget').value;
     let sl = document.getElementById('inputSl').value;
-    let exitPP = document.getElementById('inputExitPrice').value;
 
     let condition = document.getElementById('inputMarketCondition');
     let conditionText = condition.options[condition.selectedIndex].text;
@@ -125,18 +232,28 @@ function poluteInput(){
 
     let emotionNotes = document.getElementById('inputEmotionNotes').value || '-';
     let lesson = document.getElementById('inputLesson').value || '-';
-
     let improvement = document.getElementById('inputImprovement').value || '-';
 
+    // let plRs = 0;
+    // if(sellPP >= 0){
+
+    // }
+
     let newState = [{id: Date.now() ,buyDate: date,stockName: stock, buyPrice: buyPP,sellPrice: sellPP,quantity: qty, targetPrice: target, stopLoss: sl,
-        exitPrice: exitPP, marketCondition: conditionText, entryEmotion: outputEmoText, exitEmotion: exitEmoText,
-        emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: 0, plPercentage: 0, holdDays: 0, soldStatus: false,
+        marketCondition: conditionText, entryEmotion: outputEmoText, exitEmotion: exitEmoText,
+        emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: plRs, plPercentage: 0, holdDays: 0, soldStatus: false,
         trailStop: 0
     }]
+
     updateState({trade: [...state.trade,...newState]})
 
     return true
 }
+
+
+
+// ill merge the two function.
+//how? ill make a function that takes two parameter, id and idx and if idx is null then executes one func(updateState) else executes another function(updateTrade)
 
 function validation(inputId){
     const value =  parseInt(document.getElementById(inputId).value);
@@ -163,6 +280,14 @@ function saveTrade(){
         render()
     }
 }
+
+function editTrade(idx){
+    if(repolluteEditedInput(idx)){
+        hideEditDialouge()
+        render()
+    }  
+}
+
 function render(){
 
     let state = getState()
@@ -263,8 +388,10 @@ function createCard(elem,idx){
     let trailStop = createSpan(['dark:text-white', 'text-black','items-center']);
     trailStop.textContent = elem.trailStop;
 
+    let statusIconDiv = document.createElement('span')
+    statusIconDiv.classList.add('w-[100px]','flex','justify-center')
     let statusIcon = document.createElement('i')
-
+    statusIconDiv.append(statusIcon)
     statusIcon.setAttribute('data-lucide',elem.soldStatus ? 'circle-check' : 'circle')
     if(elem.soldStatus){
         statusIcon.classList.add('statusIcon','text-emerald-600','w-5')
@@ -272,7 +399,7 @@ function createCard(elem,idx){
         statusIcon.classList.add('statusIcon','text-gray-300/70','w-5','hover:text-emerald-600','transition','transition-color','duration-200','ease-in-out')
     }
 
-    let emotion = createSpan(['dark:text-white','text-black','text-sm','text-center','truncate','min-w-0','block','overflow-hidden','max-w-[200px]','wrap-break-word','hyphens-auto','w-[200px]','line-clamp-3']);
+    let emotion = createSpan(['dark:text-white','text-black','text-sm','text-center','truncate','min-w-0','block','overflow-hidden','max-w-[200px]','wrap-break-word','hyphens-auto','line-clamp-3']);
     emotion.textContent = elem.emtionNoteKey;
 
     let lessonNotes = createSpan(['dark:text-white','text-black','text-sm','text-center','truncate','min-w-0','block','overflow-hidden','max-w-[200px]','wrap-break-word','hyphens-auto','w-[200px]','line-clamp-3']);
@@ -285,6 +412,7 @@ function createCard(elem,idx){
     action.classList.add('flex','gap-2','items-center')
     let editBtn = document.createElement('button');
     editBtn.classList.add(
+    'editBtn',
     'dark:bg-[#0f172a]',
     'px-4',
     'rounded-md',
@@ -335,7 +463,7 @@ function createCard(elem,idx){
     delBtn.append(delSpan)
 
     action.append(editBtn,delBtn)
-    wrapperDiv.append(date, stock, buyPP, sellPP, qty, targetPP, sl, exitPrice, plInRs, plPercent, days, condition, entryEmo, exitEmo, trailStop,statusIcon,emotion, lessonNotes, improvementNote,action);
+    wrapperDiv.append(date, stock, buyPP, sellPP, qty, targetPP, sl,  plInRs, plPercent, days, condition, entryEmo, exitEmo, trailStop,statusIconDiv,emotion, lessonNotes, improvementNote,action);
     document.getElementById('dynamicCard').append(wrapperDiv)
     lucide.createIcons()
 }

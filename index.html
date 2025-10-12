@@ -187,10 +187,7 @@
 
                     <span class="dark:text-white/90">SL</span>
                 </div>
-                <div>
 
-                    <span class="dark:text-white/90">Exit Price</span>
-                </div>
                 <div>
 
                     <span class="dark:text-white/90">P/L(Rs)</span>
@@ -310,7 +307,7 @@
 
 
     <!-- dialog -->
-    <dialog id="myDialog" class="hidden overflow-y-scroll flex-col gap-5 bg-slate-100 w-[90%] h-[90%] m-auto rounded-xl border border-slate-300 p-5">
+    <dialog id="addTradeDialouge" class="hidden overflow-y-scroll flex-col gap-5 bg-slate-100 w-[90%] h-[90%] m-auto rounded-xl border border-slate-300 p-5">
         <!-- header -->
         <div class="flex justify-between items-center">
             <div>
@@ -392,11 +389,7 @@
                             <input type="number" placeholder="Leave if not sold" id="inputSellPrice" class="inputStyle">
                             <span class="error-msg text-red-500 text-xs"></span>
                         </div>
-                        <div class="flex flex-col gap-2 w-full">
-                            <label for="exit" class="text-black/80">Actual Exit Price(Rs)</label>
-                            <input type="number" name="exit" id="inputExitPrice" placeholder="0" class="inputStyle ">
-                            <span class="error-msg text-red-500 text-xs"></span>
-                        </div>                    
+                  
                     </div>
                 </div>
             </div>
@@ -410,28 +403,28 @@
                     <div>
                         <label for="marketCondition">Market Condition</label>
                         <select required name="marketCondition" id="inputMarketCondition" class="inputStyleSelect">
-                            <option value="bullish" selected>Bullish</option>
-                            <option value="bearish">Bearish</option>
-                            <option value="sideway">Sideways</option>
+                            <option value="Bullish" selected>Bullish</option>
+                            <option value="Bearish">Bearish</option>
+                            <option value="Sideways">Sideways</option>
                         </select>
                     </div>
                     
                     <div>
                         <label for="emotion">Emotion At Entry</label>
                         <select required name="emotion" id="inputEntryEmo" class="inputStyleSelect">
-                            <option value="fear">Fear</option>
-                            <option value="greed">Greed</option>
-                            <option value="fomo">FOMO</option>
-                            <option value="neutral">Neutral</option>
+                            <option value="Fear">Fear</option>
+                            <option value="Greed">Greed</option>
+                            <option value="Fomo">FOMO</option>
+                            <option value="Neutral">Neutral</option>
                         </select>
                     </div>
 
                     <div>
                         <label for="emotion">Emotion At Exit</label>
                         <select required name="emotion" id="inputExitEmo" class="inputStyleSelect">
-                            <option value="fear">Fear</option>
-                            <option value="greed">Greed</option>
-                            <option value="relief">Relief</option>
+                            <option value="Fear">Fear</option>
+                            <option value="Greed">Greed</option>
+                            <option value="Relief">Relief</option>
                         </select>
                     </div>
 
@@ -470,6 +463,162 @@
                     <span class="text-black text-[clamp(0.7rem,2vw,1rem)]">Cancel</span>
                 </button>
             </div>
+        </div>
+    </dialog>
+
+        <!-- edit dialouge -->
+    <dialog id="editTradeDialouge" class="hidden overflow-y-scroll flex-col gap-5 bg-slate-100 w-[90%] h-[90%] m-auto rounded-xl border border-slate-300 p-5">
+        <!-- header -->
+        <div class="flex justify-between items-center">
+            <div>
+                <span class="text-md font-semibold text-black/70">Edit Trade</span>
+            </div>
+            <div id="editCrossX">
+                <i data-lucide="x" id="cross" class="text-black/70 hover:cursor-pointer"></i>
+            </div>
+        </div>
+
+        <!-- actual inputs -->
+        <div class="flex flex-col">
+
+            <!-- input 1 basic inpformation-->
+            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5">
+                <div>
+                    <span class="text-md font-bold text-black/60">Basic Information</span>
+                </div>
+                <div class="flex w-full gap-3">
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="date">Date</label>
+                        <input required type="date" placeholder="mm/dd/yyyy" id="editInputDate" class="inputStyle">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="stock">Stock Symbol</label>
+                        <input required type="text" name="stock" id="editInputStock" placeholder="eg: NTC" class="inputStyle ">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price and quantity -->
+            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5">
+                <div>
+                    <span class="text-md font-bold text-black/60">Price & Quantity</span>
+                </div>
+                <div class="flex w-full gap-3">
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="buyPrice" class="text-black/80">Buy</label>
+                        <input required type="number" placeholder="0.00" id="editInputBuyPrice" class="inputStyle">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="buyQty" class="text-black/80">Quantity</label>
+                        <input required type="number" name="buyQty" id="editInputQty" placeholder="0" class="inputStyle ">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- third input -->
+            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5">
+                <div>
+                    <span class="text-md font-bold text-black/60">Risk & Management</span>
+                </div>
+                <div class="flex w-full gap-3">
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="buyPrice" class="text-black/80">Target Price</label>
+                        <input required type="number" placeholder="0.00" id="editInputTarget" class="inputStyle">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="stopLoss" class="text-black/80">Stop Loss(Rs)</label>
+                        <input type="number" name="stopLoss" id="editInputSl" placeholder="0" class="inputStyle ">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- fourth input -->
+            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5">
+                <div>
+                    <span class="text-md font-bold text-black/60">Exit Info(Optional)</span>
+                </div>
+                <div class="flex w-full gap-3">
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="sellPrice" class="text-black/80">Sell Price(Rs)</label>
+                        <input type="number" placeholder="Leave if not sold" id="editInputSellPrice" class="inputStyle">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- fifth input -->
+        <div class="flex flex-col justify-center items-start w-full gap-2 border-b border-gray-400/50 pb-5 mb-5">
+            <div>
+                <span class="text-md font-bold text-black/60">Market & Psychology</span>
+            </div>
+            <div class="flex w-full gap-5">
+                <div>
+                    <label for="marketCondition">Market Condition</label>
+                    <select required name="marketCondition" id="editInputMarketCondition" class="inputStyleSelect">
+                        <option value="Bullish" selected>Bullish</option>
+                        <option value="Bearish">Bearish</option>
+                        <option value="Sideways">Sideways</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="emotion">Emotion At Entry</label>
+                    <select required name="emotion" id="editInputEntryEmo" class="inputStyleSelect">
+                        <option value="Fear">Fear</option>
+                        <option value="Greed">Greed</option>
+                        <option value="Fomo">FOMO</option>
+                        <option value="Neutral">Neutral</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="emotion">Emotion At Exit</label>
+                    <select required name="emotion" id="editInputExitEmo" class="inputStyleSelect">
+                        <option value="Fear">Fear</option>
+                        <option value="Greed">Greed</option>
+                        <option value="Relief">Relief</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex flex-col w-full">
+                <label for="note">Emotion Notes</label>
+                <textarea class="inputStyle min-h-20" name="note" id="editInputEmotionNotes" placeholder="Describe Your feeling and emotion during this trade.."></textarea>
+            </div>
+        </div>
+
+        <!-- 6th -->
+        <div class="flex flex-col gap-5 pb-5">
+            <h3 class="font-bold text-md text-black/60">Learning & Improvement</h3>
+            <div class="flex flex-col gap-2">
+                <label for="note">Lesson Learned</label>
+                <textarea class="inputStyle min-h-20" name="note" id="editInputLesson" placeholder="Describe Your feeling and emotion during this trade.."></textarea>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="note">Improvements?</label>
+                <textarea class="inputStyle min-h-20" name="note" id="editInputImprovement" placeholder="Describe Your feeling and emotion during this trade.."></textarea>
+            </div>
+        </div>
+
+        <!-- two buttons -->
+        <div class="flex justify-start items-center gap-3">
+            <button id="editTrade" class="flex items-center shadow-sm bg-emerald-600 py-2 px-3 min-w-28 gap-1 rounded-md hover:cursor-pointer transition-colors hover:bg-emerald-600/90 duration-200 ease-in-out">
+                <i data-lucide="plus" class="text-white w-4 h-4 lg:w-5 lg:h-5"></i>
+                <span class="text-white text-[clamp(0.7rem,2vw,1rem)]">Edit Trade</span>
+            </button>
+
+            <button id="editCancel" class="flex items-center py-2 px-3 min-w-28 gap-1 rounded-md border-1 border-slate-200 hover:cursor-pointer transition-colors bg-white shadow-sm hover:bg-white/50 duration-200 ease-in-out">
+                <i data-lucide="plus" class="text-white w-4 h-4 lg:w-5 lg:h-5"></i>
+                <span class="text-black text-[clamp(0.7rem,2vw,1rem)]">Cancel</span>
+            </button>
         </div>
     </dialog>
 
