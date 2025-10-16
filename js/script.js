@@ -48,8 +48,19 @@ document.addEventListener('DOMContentLoaded',()=>{
 // })
 
 document.getElementById('theme').addEventListener('click',()=>{
-    document.querySelector('html').classList.toggle('dark')
+    let state = getState()
+    updateState({isDark: !state.isDark})
+    toggleTheme()    
 })
+
+function toggleTheme(){
+    let state = getState()
+    if(state.isDark){
+        document.querySelector('html').classList.add('dark')
+    }else{
+        document.querySelector('html').classList.remove('dark')
+    }
+}
 
 document.getElementById('saveTrade').addEventListener('click',(e)=>{
     saveTrade()
@@ -297,7 +308,7 @@ function editTrade(idx){
 }
 
 function render(){
-
+    toggleTheme()
     let state = getState()
     countCompleteTrade()
     renderCards()
