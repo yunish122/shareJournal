@@ -58,20 +58,23 @@
             box-shadow: 0 0 0.3125rem rgba(0, 0, 0, 0.05); 
             font-size: 1rem; 
         }
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.6);
+        }
     </style>
 
 </head>
 <body class="w-screen h- h-screen p-8 lg:p-10 flex flex-col gap-5 dark:bg-[#0f172a] ">
-    <header class="flex justify-between items-center ">
+    <header class="flex justify-between items-start ">
         <div>
             <h1 class="text-3xl font-bold text-gray-600 dark:text-white">Share Trading Journal</h1>
             <h2 class="text-lg text-gray-600 dark:text-white/60">Track your trades and improve your discipline</h2>
         </div>
-        <div class="flex gap-5 items-center">
+        <div class="flex gap-5 items-center ">
             <button id="theme" class="dark:border-slate-600  border-1 py-2 px-3 border-gray-400/50 shadow-sm hover:dark:bg-emerald-600 transition-colors duration-200 ease-in-out rounded-md">
-                <i data-lucide="sun" class="dark:text-white w-5"></i>
+                <i data-lucide="sun" class="dark:text-white w-4 h-4 lg:w-5 lg:h-5"></i>
             </button>
-            <button class="flex items-center bg-emerald-600 py-2 px-3 min-w-28 gap-1 rounded-md hover:cursor-pointer transition-colors hover:bg-emerald-600/90 duration-200 ease-in-out">
+            <button class="flex items-center bg-emerald-600 py-2 px-3  gap-1 rounded-md hover:cursor-pointer transition-colors hover:bg-emerald-600/90 duration-200 ease-in-out">
                 <i data-lucide="plus" class="text-white w-4 h-4 lg:w-5 lg:h-5"></i>
                 <span id="addTrade" class="text-white text-[clamp(0.7rem,2vw,1rem)]">Add Trade</span>
             </button>            
@@ -83,7 +86,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Total Trades</h3>
-                <h3 class="text-black/60 text-md font-bold dark:text-white">2</h3>
+                <h3 id="totalTrade" class="text-black/60 text-md font-bold dark:text-white">0</h3>
             </div>
             <div>
                 <i data-lucide="chart-column" class="text-black/60 w-6 dark:text-white/80"></i>
@@ -93,7 +96,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Active Trades</h3>
-                <h3 class="text-md text-black/60 font-bold dark:text-white">1</h3>
+                <h3 id="activeTrade" class="text-md text-black/60 font-bold dark:text-white">0</h3>
             </div>
             <div>
                 <i data-lucide="notepad-text" class="w-6 text-black/60 dark:text-white/80"></i>
@@ -103,7 +106,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Win Rate</h3>
-                <h3 class="text-emerald-600 dark:text-emerald-400 font-bold text-md">50.0%</h3>
+                <h3 id="winRate" class="text-emerald-600 dark:text-emerald-400 font-bold text-md">0.00%</h3>
             </div>
             <div>
                 <i data-lucide="trending-up" class="w-6 text-emerald-600 dark:text-emerald-400"></i>
@@ -113,7 +116,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Loss Rate</h3>
-                <h3 class="text-red-600 dark:text-red-500 text-md font-bold">50.0%</h3>
+                <h3 id="lossRate" class="text-red-600 dark:text-red-500 text-md font-bold">0.00%</h3>
             </div>
             <div>
                 <i data-lucide="trending-down" class="w-6 dark:text-red-500 text-red-600"></i>
@@ -123,7 +126,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Net P/L</h3>
-                <h3 class="text-md font-bold text-emerald-600 dark:text-emerald-400">Rs1000</h3>
+                <h3 id="netPl" class="netPL font-bold text-md"></h3>
             </div>
             <div>
                 <i data-lucide="dollar-sign" class="w-6 text-emerald-600/70 dark:text-emerald-500"></i>
@@ -133,7 +136,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <p class="text-xs text-black/60 font-semibold dark:text-white/70">Avg Holding Period</p>
-                <h3 class="text-md font-bold text-black/80 dark:text-white">12.5Days</h3>
+                <h3 id="avgHoldingDay" class="text-md font-bold text-black/80 dark:text-white">0 Days</h3>
             </div>
             <div>
                 <i data-lucide="notepad-text" class="text-black/60 dark:text-white/70 w-6"></i>
@@ -143,7 +146,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <p class="text-xs text-black/60 font-medium dark:text-white/70">Avg Risk Reward </p>
-                <h3 class="text-md font-bold text-emerald-600 dark:text-emerald-400">1:1.70</h3>
+                <h3 id="avgRiskReward" class="text-md font-bold text-emerald-600 dark:text-emerald-400">0:0</h3>
             </div>
             <div>
                 <i data-lucide="target" class="text-red-600 dark:text-red-500 w-6"></i>
@@ -156,9 +159,10 @@
         <div class="">
             <h3 class="text-md font-bold text-black/80 dark:text-white/95">Trading Records</h3>
         </div>
-
-        <article id="appendDiv" class="flex flex-col gap-5 overflow-x-scroll">
-            <div class="gridStyle  pb-5">
+        
+        <!-- gave container overflow to cramp as much element i want -->
+        <article id="appendDiv" class="flex flex-col gap-5 overflow-x-scroll" >
+            <div class="gridStyle  pb-5" >
                 <div>
                     <span class="dark:text-white/90">Date</span>
                 </div>
@@ -186,10 +190,7 @@
 
                     <span class="dark:text-white/90">SL</span>
                 </div>
-                <div>
 
-                    <span class="dark:text-white/90">Exit Price</span>
-                </div>
                 <div>
 
                     <span class="dark:text-white/90">P/L(Rs)</span>
@@ -239,7 +240,7 @@
                 </div>
             </div>
 
-
+            <div id="dynamicCard"></div>
             <!-- stock append hune thau
             <article id="appendDiv" class="">
                 <div class="gridStyle">
@@ -309,7 +310,7 @@
 
 
     <!-- dialog -->
-    <dialog id="myDialog" class="hidden overflow-y-scroll flex-col gap-5 bg-slate-100 w-[90%] h-[90%] m-auto rounded-xl border border-slate-300 p-5">
+    <dialog id="addTradeDialouge" class="hidden overflow-y-scroll flex-col gap-5 bg-slate-100 w-[90%] h-[90%] m-auto rounded-xl border border-slate-300 p-5">
         <!-- header -->
         <div class="flex justify-between items-center">
             <div>
@@ -323,77 +324,77 @@
         <!-- actual inputs -->
         <div class="flex flex-col ">
 
-            
-            <!-- input 1 basic inpformation-->
-            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5" >
-                <div>
-                    <span class="text-md font-bold text-black/60">Basic Information</span>
-                </div>
-                <div class="flex w-full gap-3">
-                    <div class="flex flex-col gap-2 w-full">
-                        <label for="date">Date</label>
-                        <input required type="date" placeholder="mm/dd/yyyy" id="inputDate" class="inputStyle">
+        <!-- input 1 basic inpformation-->
+                <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5" >
+                    <div>
+                        <span class="text-md font-bold text-black/60">Basic Information</span>
                     </div>
-                    <div class="flex flex-col gap-2 w-full">
-                        <label for="stock">Stock Symbol</label>
-                        <input required type="text" name="stock" id="inputStock" placeholder="eg: NTC" class="inputStyle ">
-                    </div>                
-                </div>
-
-            </div>
-
-            <!-- Price and quantity -->
-            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5" >
-                <div>
-                    <span class="text-md font-bold text-black/60">Price & Qantity</span>
-                </div>
-                <div class="flex w-full gap-3">
-                    <div class="flex flex-col gap-2 w-full">
-                        <label for="buyPrice" class="text-black/80">Buy</label>
-                        <input required type="number" placeholder="0.00" id="inputBuyPrice" class="inputStyle">
+                    <div class="flex w-full gap-3">
+                        <div class="flex flex-col gap-2 w-full">
+                            <label for="date">Date</label>
+                            <input required type="date" placeholder="mm/dd/yyyy" id="inputDate" class="inputStyle">
+                            <span class="error-msg text-red-500 text-xs"></span>
+                        </div>
+                        <div class="flex flex-col gap-2 w-full">
+                            <label for="stock">Stock Symbol</label>
+                            <input required type="text" name="stock" id="inputStock" placeholder="eg: NTC" class="inputStyle ">
+                            <span class="error-msg text-red-500 text-xs"></span>
+                        </div>                
                     </div>
-                    <div class="flex flex-col gap-2 w-full">
-                        <label for="buyQty" class="text-black/80">Quantity</label>
-                        <input required type="number" name="buyQty" id="inputQty" placeholder="0" class="inputStyle ">
-                    </div>                    
                 </div>
 
-            </div>
-
-            <!-- third input -->
-            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5" >
-                <div>
-                    <span class="text-md font-bold text-black/60">Risk & Management</span>
-                </div>
-                <div class="flex w-full gap-3">
-                    <div class="flex flex-col gap-2 w-full">
-                        <label for="buyPrice" class="text-black/80">Target Price</label>
-                        <input required type="number" placeholder="0.00" id="inputTarget" class="inputStyle">
+                <!-- Price and quantity -->
+                <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5" >
+                    <div>
+                        <span class="text-md font-bold text-black/60">Price & Quantity</span>
                     </div>
-                    <div class="flex flex-col gap-2 w-full">
-                        <label for="stopLoss" class="text-black/80">Stop Loss(Rs)</label>
-                        <input type="number" name="stopLoss" id="inputSl" placeholder="0" class="inputStyle ">
-                    </div>                    
-                </div>
-
-            </div>
-
-            <!-- fourth input -->
-            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5" >
-                <div>
-                    <span class="text-md font-bold text-black/60">Exit Info(Optional)</span>
-                </div>
-                <div class="flex w-full gap-3">
-                    <div class="flex flex-col gap-2 w-full">
-                        <label for="sellPrice" class="text-black/80">Sell Price(Rs)</label>
-                        <input type="number" placeholder="Leave if not sold" id="inputSellPrice" class="inputStyle">
+                    <div class="flex w-full gap-3">
+                        <div class="flex flex-col gap-2 w-full">
+                            <label for="buyPrice" class="text-black/80">Buy</label>
+                            <input required type="number" placeholder="0.00" id="inputBuyPrice" class="inputStyle">
+                            <span class="error-msg text-red-500 text-xs"></span>
+                        </div>
+                        <div class="flex flex-col gap-2 w-full">
+                            <label for="buyQty" class="text-black/80">Quantity</label>
+                            <input required type="number" name="buyQty" id="inputQty" placeholder="0" class="inputStyle ">
+                            <span class="error-msg text-red-500 text-xs"></span>
+                        </div>                    
                     </div>
-                    <div class="flex flex-col gap-2 w-full">
-                        <label for="exit" class="text-black/80">Actual Exit Price(Rs)</label>
-                        <input type="number" name="exit" id="inputExitPrice" placeholder="0" class="inputStyle ">
-                    </div>                    
                 </div>
 
+                <!-- third input -->
+                <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5" >
+                    <div>
+                        <span class="text-md font-bold text-black/60">Risk & Management</span>
+                    </div>
+                    <div class="flex w-full gap-3">
+                        <div class="flex flex-col gap-2 w-full">
+                            <label for="buyPrice" class="text-black/80">Target Price</label>
+                            <input required type="number" placeholder="0.00" id="inputTarget" class="inputStyle">
+                            <span class="error-msg text-red-500 text-xs"></span>
+                        </div>
+                        <div class="flex flex-col gap-2 w-full">
+                            <label for="stopLoss" class="text-black/80">Stop Loss(Rs)</label>
+                            <input type="number" name="stopLoss" id="inputSl" placeholder="0" class="inputStyle ">
+                            <span class="error-msg text-red-500 text-xs"></span>
+                        </div>                    
+                    </div>
+                </div>
+
+                <!-- fourth input -->
+                <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5" >
+                    <div>
+                        <span class="text-md font-bold text-black/60">Exit Info(Optional)</span>
+                    </div>
+                    <div class="flex w-full gap-3">
+                        <div class="flex flex-col gap-2 w-full">
+                            <label for="sellPrice" class="text-black/80">Sell Price(Rs)</label>
+                            <input type="number" placeholder="Leave if not sold" id="inputSellPrice" class="inputStyle">
+                            <span class="error-msg text-red-500 text-xs"></span>
+                        </div>
+                  
+                    </div>
+                </div>
             </div>
 
             <!-- fifth input -->
@@ -405,28 +406,28 @@
                     <div>
                         <label for="marketCondition">Market Condition</label>
                         <select required name="marketCondition" id="inputMarketCondition" class="inputStyleSelect">
-                            <option value="bullish" selected>Bullish</option>
-                            <option value="bearish">Bearish</option>
-                            <option value="sideway">Sideways</option>
+                            <option value="Bullish" selected>Bullish</option>
+                            <option value="Bearish">Bearish</option>
+                            <option value="Sideways">Sideways</option>
                         </select>
                     </div>
                     
                     <div>
                         <label for="emotion">Emotion At Entry</label>
                         <select required name="emotion" id="inputEntryEmo" class="inputStyleSelect">
-                            <option value="fear">Fear</option>
-                            <option value="greed">Greed</option>
-                            <option value="fomo">FOMO</option>
-                            <option value="neutral">Neutral</option>
+                            <option value="Fear">Fear</option>
+                            <option value="Greed">Greed</option>
+                            <option value="Fomo">FOMO</option>
+                            <option value="Neutral">Neutral</option>
                         </select>
                     </div>
 
                     <div>
                         <label for="emotion">Emotion At Exit</label>
                         <select required name="emotion" id="inputExitEmo" class="inputStyleSelect">
-                            <option value="fear">Fear</option>
-                            <option value="greed">Greed</option>
-                            <option value="relief">Relief</option>
+                            <option value="Fear">Fear</option>
+                            <option value="Greed">Greed</option>
+                            <option value="Relief">Relief</option>
                         </select>
                     </div>
 
@@ -468,5 +469,176 @@
         </div>
     </dialog>
 
+
+
+        <!-- edit dialouge -->
+    <dialog id="editTradeDialouge" class="hidden overflow-y-scroll flex-col gap-5 bg-slate-100 w-[90%] h-[90%] m-auto rounded-xl border border-slate-300 p-5">
+        <!-- header -->
+        <div class="flex justify-between items-center">
+            <div>
+                <span class="text-md font-semibold text-black/70">Edit Trade</span>
+            </div>
+            <div id="editCrossX">
+                <i data-lucide="x" id="cross" class="text-black/70 hover:cursor-pointer"></i>
+            </div>
+        </div>
+
+        <!-- actual inputs -->
+        <div class="flex flex-col">
+
+            <!-- input 1 basic inpformation-->
+            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5">
+                <div>
+                    <span class="text-md font-bold text-black/60">Basic Information</span>
+                </div>
+                <div class="flex w-full gap-3">
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="date">Date</label>
+                        <input required type="date" placeholder="mm/dd/yyyy" id="editInputDate" class="inputStyle">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="stock">Stock Symbol</label>
+                        <input required type="text" name="stock" id="editInputStock" placeholder="eg: NTC" class="inputStyle ">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price and quantity -->
+            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5">
+                <div>
+                    <span class="text-md font-bold text-black/60">Price & Quantity</span>
+                </div>
+                <div class="flex w-full gap-3">
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="buyPrice" class="text-black/80">Buy</label>
+                        <input required type="number" placeholder="0.00" id="editInputBuyPrice" class="inputStyle">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="buyQty" class="text-black/80">Quantity</label>
+                        <input required type="number" name="buyQty" id="editInputQty" placeholder="0" class="inputStyle ">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- third input -->
+            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5">
+                <div>
+                    <span class="text-md font-bold text-black/60">Risk & Management</span>
+                </div>
+                <div class="flex w-full gap-3">
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="buyPrice" class="text-black/80">Target Price</label>
+                        <input required type="number" placeholder="0.00" id="editInputTarget" class="inputStyle">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="stopLoss" class="text-black/80">Stop Loss(Rs)</label>
+                        <input type="number" name="stopLoss" id="editInputSl" placeholder="0" class="inputStyle ">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- fourth input -->
+            <div class="flex flex-col justify-center items-start w-full gap-1 border-b border-gray-400/50 pb-5 mb-5">
+                <div>
+                    <span class="text-md font-bold text-black/60">Exit Info(Optional)</span>
+                </div>
+                <div class="flex w-full gap-3">
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="sellPrice" class="text-black/80">Sell Price(Rs)</label>
+                        <input type="number" placeholder="Leave if not sold" id="editInputSellPrice" class="inputStyle">
+                        <span class="error-msg text-red-500 text-xs"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- fifth input -->
+        <div class="flex flex-col justify-center items-start w-full gap-2 border-b border-gray-400/50 pb-5 mb-5">
+            <div>
+                <span class="text-md font-bold text-black/60">Market & Psychology</span>
+            </div>
+            <div class="flex w-full gap-5">
+                <div>
+                    <label for="marketCondition">Market Condition</label>
+                    <select required name="marketCondition" id="editInputMarketCondition" class="inputStyleSelect">
+                        <option value="Bullish" selected>Bullish</option>
+                        <option value="Bearish">Bearish</option>
+                        <option value="Sideways">Sideways</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="emotion">Emotion At Entry</label>
+                    <select required name="emotion" id="editInputEntryEmo" class="inputStyleSelect">
+                        <option value="Fear">Fear</option>
+                        <option value="Greed">Greed</option>
+                        <option value="Fomo">FOMO</option>
+                        <option value="Neutral">Neutral</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="emotion">Emotion At Exit</label>
+                    <select required name="emotion" id="editInputExitEmo" class="inputStyleSelect">
+                        <option value="Fear">Fear</option>
+                        <option value="Greed">Greed</option>
+                        <option value="Relief">Relief</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex flex-col w-full">
+                <label for="note">Emotion Notes</label>
+                <textarea class="inputStyle min-h-20" name="note" id="editInputEmotionNotes" placeholder="Describe Your feeling and emotion during this trade.."></textarea>
+            </div>
+        </div>
+
+        <!-- 6th -->
+        <div class="flex flex-col gap-5 pb-5">
+            <h3 class="font-bold text-md text-black/60">Learning & Improvement</h3>
+            <div class="flex flex-col gap-2">
+                <label for="note">Lesson Learned</label>
+                <textarea class="inputStyle min-h-20" name="note" id="editInputLesson" placeholder="Describe Your feeling and emotion during this trade.."></textarea>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="note">Improvements?</label>
+                <textarea class="inputStyle min-h-20" name="note" id="editInputImprovement" placeholder="Describe Your feeling and emotion during this trade.."></textarea>
+            </div>
+        </div>
+
+        <!-- two buttons -->
+        <div class="flex justify-start items-center gap-3">
+            <button id="editTrade" class="flex items-center shadow-sm bg-emerald-600 py-2 px-3 min-w-28 gap-1 rounded-md hover:cursor-pointer transition-colors hover:bg-emerald-600/90 duration-200 ease-in-out">
+                <i data-lucide="plus" class="text-white w-4 h-4 lg:w-5 lg:h-5"></i>
+                <span class="text-white text-[clamp(0.7rem,2vw,1rem)]">Edit Trade</span>
+            </button>
+
+            <button id="editCancel" class="flex items-center py-2 px-3 min-w-28 gap-1 rounded-md border-1 border-slate-200 hover:cursor-pointer transition-colors bg-white shadow-sm hover:bg-white/50 duration-200 ease-in-out">
+                <i data-lucide="plus" class="text-white w-4 h-4 lg:w-5 lg:h-5"></i>
+                <span class="text-black text-[clamp(0.7rem,2vw,1rem)]">Cancel</span>
+            </button>
+        </div>
+    </dialog>
+        <!-- delete dialouge -->
+    <dialog id="confirmDeleteDialog" class="hidden flex-col justify-center items-center gap-5 bg-slate-100 w-[40%] h-[40%]">
+        <form method="dialog" class="flex flex-col justify-between items-center gap-5">
+            <h1 class="">Delete Confirmation</h1>
+            <h2>Do you really want to delete?</p>
+
+            <div class="flex items-center justify-center gap-3">
+                <button value="confirm" class=" bg-emerald-600 px-3 py-2 rounded-md"><span class="text-white text-[clamp(1px, 2vw, 10px)]">Confirm</span></button>
+                <button value="cancel" class=" bg-red-500/90  px-3 py-2 rounded-md text-[clamp(5px, 2vw, 10px)]">Cancel</button>
+            </div>
+
+        </form>
+
+    </dialog>
 </body>
 </html>
