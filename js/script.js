@@ -1,3 +1,4 @@
+import { countActiveTrade, countTotalTrade, calculatePl, countCompleteTrade,countLossRate,countWinRate, countNetPL, calculatePlinPercentage } from "./helper/cards.js"
 import { create_element, createSpan } from "./helper/helper.js"
 import { getState, updateState, updateTrade } from "./state/state.js"
 let dialog = document.getElementById('addTradeDialouge')
@@ -101,6 +102,10 @@ document.getElementById('dynamicCard').addEventListener(('click'),(e)=>{
 
 })
 
+
+
+
+
 function populateForm(elem) {
     document.getElementById('editInputDate').value = elem.Date || '';
     document.getElementById('editInputStock').value = elem.stockName || '';
@@ -124,6 +129,7 @@ function populateForm(elem) {
 
     let value3 = checkForPlaceHolder('',elem.improveKey)
     document.getElementById('editInputImprovement').value = value3
+
 }
 
 function checkForPlaceHolder(placeholder, value){
@@ -188,9 +194,12 @@ function repolluteEditedInput(idx){
     let lesson = document.getElementById('editInputLesson').value || '-';
     let improvement = document.getElementById('editInputImprovement').value || '-';
 
+    let plinRs = calculatePl(buyPP,sellPP,qty);
+    let plinPercentage = calculatePlinPercentage(buyPP,sellPP,qty);
+
     let newState = {buyDate: date,stockName: stock, buyPrice: buyPP,sellPrice: sellPP,quantity: qty, targetPrice: target, stopLoss: sl,
         marketCondition: conditionText, entryEmotion: outputEmoText, exitEmotion: exitEmoText,
-        emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: 0, plPercentage: 0, holdDays: 0, soldStatus: false,
+        emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: plinRs, plPercentage: plinPercentage, holdDays: 0, soldStatus: false,
         trailStop: 0
     }
 
@@ -234,14 +243,13 @@ function poluteInput(){
     let lesson = document.getElementById('inputLesson').value || '-';
     let improvement = document.getElementById('inputImprovement').value || '-';
 
-    // let plRs = 0;
-    // if(sellPP >= 0){
+    let plinRs = calculatePl(buyPP,sellPP,qty);
+    let plinPercentage = calculatePlinPercentage(buyPP,sellPP,qty);
 
-    // }
 
     let newState = [{id: Date.now() ,buyDate: date,stockName: stock, buyPrice: buyPP,sellPrice: sellPP,quantity: qty, targetPrice: target, stopLoss: sl,
         marketCondition: conditionText, entryEmotion: outputEmoText, exitEmotion: exitEmoText,
-        emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: 0, plPercentage: 0, holdDays: 0, soldStatus: false,
+        emtionNoteKey: emotionNotes, lessonKey: lesson, improveKey: improvement, plRs: plinRs, plPercentage: plinPercentage, holdDays: 0, soldStatus: false,
         trailStop: 0
     }]
 
@@ -291,8 +299,8 @@ function editTrade(idx){
 function render(){
 
     let state = getState()
+    countCompleteTrade()
     renderCards()
-    console.log(state)
     if(state.trade.length === 0){
         document.getElementById('toBeHidden').classList.remove('hidden')
         document.getElementById('toBeHidden').classList.add('flex')
@@ -312,26 +320,43 @@ function render(){
 }
 
 function renderCards(){
+    let state = getState()
     let totalTrade = countTotalTrade();
     document.getElementById('totalTrade').textContent = totalTrade
     
     let activeTradeCount = countActiveTrade()
     document.getElementById('activeTrade').textContent = activeTradeCount
 
+    let winRate = countWinRate()
+    document.getElementById('winRate').textContent = winRate+'%'
+    document.getElementById('winRate').classList.add('text-emerald-600')
+    
+    let compelteTrade = countCompleteTrade()
+    console.log(compelteTrade)
+    if(totalTrade > 0 && state.totalCompleteTrade >= 1){
+        let lossRate = countLossRate(winRate)
+        document.getElementById('lossRate').textContent = lossRate+'%'
+        document.getElementById('lossRate').classList.add('text-red-500')
+    }else{
+        document.getElementById('lossRate').textContent = '0.00%'
+        document.getElementById('lossRate').classList.add('text-red-500')
+    }
+
+    let netPl = countNetPL()
+    document.getElementById('netPl').textContent = netPl+'Rs'
+    setPriceColor(netPl,document.getElementsByClassName('netPL')[0])
 }
 
-function countTotalTrade(){
-    let state = getState();
 
-    let count = state.trade.length;
-    return count
-}
 
-function countActiveTrade(){
-    let state = getState()
-    let count = 0
-    state.trade.forEach(elem => !elem.soldStatus ? count++ : count)
-    return count
+function setPriceColor(price,elem){
+    if(price > 0){
+        elem.classList.add('text-green-300')
+    }else if(price < 0){
+        elem.classList.add('text-red-600')
+    }else{
+        elem.classList.add('text-white')
+    }
 }
 
 function createCard(elem,idx){
@@ -367,11 +392,12 @@ function createCard(elem,idx){
     let exitPrice = createSpan(['dark:text-white', 'text-black']);
     exitPrice.textContent = elem.exitPrice;
 
-    let plInRs = createSpan(['dark:text-white', 'text-black']);
-    plInRs.textContent = elem.plRs;
+    let plInRs = document.createElement('span')
+    plInRs.textContent = elem.plRs  + "Rs";
+    setPriceColor(elem.plRs, plInRs)
 
     let plPercent = createSpan(['dark:text-white', 'text-black']);
-    plPercent.textContent = elem.plPercentage;
+    plPercent.textContent = elem.plPercentage +'%';
 
     let days = createSpan(['dark:text-white', 'text-black']);
     days.textContent = elem.holdDays;

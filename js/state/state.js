@@ -1,7 +1,8 @@
 let state = JSON.parse(localStorage.getItem('states')) || {
     total : 0,
     isDark: false,
-    trade: []
+    trade: [],
+    totalCompleteTrade: 0
 }
 export function getState(){
     return state

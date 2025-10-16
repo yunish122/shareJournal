@@ -58,6 +58,9 @@
             box-shadow: 0 0 0.3125rem rgba(0, 0, 0, 0.05); 
             font-size: 1rem; 
         }
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.6);
+        }
     </style>
 
 </head>
@@ -123,7 +126,7 @@
         <div>
             <div class="flex flex-col gap-1.5">
                 <h3 class="text-xs text-black/60 font-semibold dark:text-white/70">Net P/L</h3>
-                <h3 id="netPL" class="text-md font-bold text-emerald-600 dark:text-emerald-400">Rs 0</h3>
+                <h3 id="netPl" class="netPL font-bold text-md"></h3>
             </div>
             <div>
                 <i data-lucide="dollar-sign" class="w-6 text-emerald-600/70 dark:text-emerald-500"></i>
@@ -466,6 +469,8 @@
         </div>
     </dialog>
 
+
+
         <!-- edit dialouge -->
     <dialog id="editTradeDialouge" class="hidden overflow-y-scroll flex-col gap-5 bg-slate-100 w-[90%] h-[90%] m-auto rounded-xl border border-slate-300 p-5">
         <!-- header -->
@@ -621,6 +626,19 @@
             </button>
         </div>
     </dialog>
+        <!-- delete dialouge -->
+    <dialog id="confirmDeleteDialog" class="hidden flex-col justify-center items-center gap-5 bg-slate-100 w-[40%] h-[40%]">
+        <form method="dialog" class="flex flex-col justify-between items-center gap-5">
+            <h1 class="">Delete Confirmation</h1>
+            <h2>Do you really want to delete?</p>
 
+            <div class="flex items-center justify-center gap-3">
+                <button value="confirm" class=" bg-emerald-600 px-3 py-2 rounded-md"><span class="text-white text-[clamp(1px, 2vw, 10px)]">Confirm</span></button>
+                <button value="cancel" class=" bg-red-500/90  px-3 py-2 rounded-md text-[clamp(5px, 2vw, 10px)]">Cancel</button>
+            </div>
+
+        </form>
+
+    </dialog>
 </body>
 </html>
